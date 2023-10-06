@@ -1,51 +1,64 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { ButtonsList } from './ButtonsList';
 import { Statistics } from './Statistics';
 
 import { Notification } from './Notification';
 import { Section } from './Section';
 
-export class Feedback extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
+export const Feedback =()=> {
+ 
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+    const handleFeedback = feedback => {
+    switch (feedback) {
+      case 'good':
+        setGood(prevState => prevState + 1);
+        break;
+      case 'neutral':
+        setNeutral(prevState => prevState + 1);
+        break;
+      case 'bad':
+        setBad(prevState => prevState + 1);
+        break;
+      default: {
+      }
+    }
   };
 
-  handleFeedback = event => {
-    this.setState(prevState => ({
-      [event.target.name]: prevState[event.target.name] + 1,
-    }));
+  const countTotalFeedback = () => {
+    return good + neutral + bad;
   };
 
-  countTotalFeedback = () => {
-    return this.state.good + this.state.neutral + this.state.bad;
-  };
-
-  findPositivePersentage = data => {
+  const findPositivePersentage = data => {
   
     return Math.floor(
       (data.good / (data.neutral + data.bad + data.good)) * 100
     );
   };
 
-  render() {
+  
     return (
       <div >
         <Section title={'Please leave feedback'}>
           <ButtonsList
             options={['good', 'neutral', 'bad']}
-            onLeaveFeedback={this.handleFeedback}
+            onLeaveFeedback={handleFeedback}
           />
         </Section>
         <Section title={'Statistics'}>
-          {this.countTotalFeedback() !== 0 ? (
+          {countTotalFeedback() !== 0 ? (
             <Statistics
-              good={this.state.good}
-              neutral={this.state.neutral}
-              bad={this.state.bad}
-              total={this.countTotalFeedback()}
-              positivePersentage={this.findPositivePersentage(this.state)}
+              good={good}
+              neutral={neutral}
+              bad={bad}
+              total={countTotalFeedback()}
+              positivePersentage={findPositivePersentage({
+                good: good,
+                neutral: neutral,
+                bad: bad
+              })}
             />
           ) : (
             <Notification message="There is no feedback" />
@@ -54,4 +67,3 @@ export class Feedback extends Component {
       </div>
     );
   }
-}

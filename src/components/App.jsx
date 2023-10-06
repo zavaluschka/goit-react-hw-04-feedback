@@ -2,9 +2,7 @@ import React from 'react';
 import { Feedback } from "./Feedback";
 
 
-export class App extends React.Component {
-  
-  render() {
+export const App =()=>{
     
     return (
       <div >
@@ -14,5 +12,5 @@ export class App extends React.Component {
       </div>
     );
   };
-}
+
 
